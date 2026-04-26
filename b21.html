@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        #product-list {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            background: #fff;
+            width: 220px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .item img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        .name {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            height: 35px;
+        }
+
+        .price {
+            color: red;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .discount {
+            background: #ffaa00;
+            color: #fff;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .info {
+            font-size: 11px;
+            color: #777;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Hot Trend Products</h2>
+    <div id="product-list"></div>
+
+    <script>
+        let hotTrend = [
+            {
+                img: "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/_/t_m_12_1_3_2_2_3_1_1.png",
+                name: "iPhone 14 Pro Max 128GB Tím",
+                price: "26790000đ",
+                discount: "19",
+                chip: "Apple A16 Bionic 6 nhân",
+                sizeScreen: "6.7",
+                ram: "6",
+                rom: "12"
+            },
+            {
+                img: "https://product.hstatic.net/1000329106/product/vang_c027cbfba10f4613a57747e6b03f65c2_master.jpg",
+                name: "iPhone 14 Pro Max 128GB Vàng",
+                price: "26790000đ",
+                discount: "19",
+                chip: "Apple A16 Bionic",
+                sizeScreen: "6.7",
+                ram: "6",
+                rom: "128"
+            },
+            {
+                img: "https://i.ebayimg.com/images/g/nM0AAeSwG9NocMDd/s-l960.webp",
+                name: "Samsung Galaxy A04s 4GB/64GB Xanh",
+                price: "2990000đ",
+                discount: "25",
+                chip: "Exynos 850 (8nm)",
+                sizeScreen: "6.5",
+                ram: "6",
+                rom: "64"
+            },
+            {
+                img: "https://icdn.24h.com.vn/upload/3-2024/images/2024-08-21/image1-1724227840-844-width656height641.png",
+                name: "Điện thoại OPPO A77s 8GB/128GB Xanh",
+                price: "5490000đ",
+                discount: "13",
+                chip: "Qualcomm Snapdragon 680",
+                sizeScreen: "6.58",
+                ram: "6",
+                rom: "128"
+            },
+            {
+                img: "https://crdms.images.consumerreports.org/f_auto,w_1200/prod/products/cr/models/409563-smartphones-samsung-galaxy-a14-5g-10034928.png",
+                name: "Samsung Galaxy A14 5G 4GB/128GB Đỏ",
+                price: "3990000đ",
+                discount: "23",
+                chip: "Mediatek MT6833 Dimensity 700",
+                sizeScreen: "6",
+                ram: "4",
+                rom: "16"
+            }
+        ];
+
+        const container = document.getElementById('product-list');
+
+        hotTrend.forEach(item => {
+            container.innerHTML += `
+                <div class="item">
+                    <img src="${item.img}">
+                    <div class="name">${item.name}</div>
+                    <div class="price">${item.price}</div>
+                    <div class="discount">Giảm ${item.discount}%</div>
+                    <div class="info">
+                        Chip: ${item.chip}<br>
+                        Màn: ${item.sizeScreen} inch<br>
+                        RAM: ${item.ram}GB - ROM: ${item.rom}GB
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Poly Coffee - Quản lý điện thoại</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .btn-cart-top {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            height: 40px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .price {
+            color: #d70018;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin: 2px 0;
+        }
+
+        .btn-add {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-view {
+            background: #2980b9;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            width: 85%;
+            margin: 50px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-header {
+            background: #6c5ce7;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #6c5ce7;
+            color: white;
+            padding: 10px;
+            font-size: 13px;
+        }
+
+        td {
+            border-bottom: 1px solid #eee;
+            padding: 10px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .btn-plus {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .btn-minus {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .btn-del {
+            background: #ff4757;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #detail-page {
+            display: none;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-flex {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .detail-left {
+            flex: 1;
+            text-align: center;
+        }
+
+        .detail-right {
+            flex: 1;
+        }
+
+        .detail-price-box {
+            background: #fff4e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .detail-price-main {
+            color: #e67e22;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .spec-table {
+            width: 100%;
+            margin-top: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .spec-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="home-page">
+            <div class="header">
+                <button class="btn-cart-top" onclick="showCart(true)">Giỏ hàng</button>
+            </div>
+            <div id="product-list" class="product-grid"></div>
+        </div>
+
+        <div id="detail-page">
+            <div id="detail-data"></div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="goHome()"
+                    style="padding: 10px 50px; border-radius: 20px; cursor: pointer; border: 1px solid #ccc; background: white;">Quay
+                    lại</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Giỏ hàng</div>
+            <div class="modal-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Hình ảnh</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng tiền</th>
+                            <th>Điều chỉnh</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-body"></tbody>
+                </table>
+                <div style="text-align: right; margin-top: 20px;">
+                    <button onclick="showCart(false)"
+                        style="background: #7f8c8d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Close</button>
+                    <button
+                        style="background: #6c5ce7; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const listSP = [
+            { id: 1, name: "Samsung Galaxy A04 3GB/32GB Đen", price: 2090000, img: "https://cdn.kalvo.com/uploads/img/gallery/samsung-galaxy-a04-4.jpg", km: 20, chip: "MediaTek Helio P35", ram: "2", rom: "12" },
+            { id: 2, name: "iPhone 14 Pro Max 128GB Tím", price: 26790000, img: "https://cdn2.cellphones.com.vn/x/media/catalog/product/t/_/t_m_18_1_3_2_1.png", km: 19, chip: "Apple A16 Bionic", ram: "6", rom: "12" },
+            { id: 3, name: "iPhone 14 Pro Max 128GB Vàng", price: 26790000, img: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/v/_/v_ng_20_2_1_2.png", km: 19, chip: "Apple A16 Bionic", ram: "6", rom: "128" },
+            { id: 4, name: "Samsung Galaxy A14 5G 4GB/128GB Bạc", price: 3990000, img: "https://cdn2.fptshop.com.vn/unsafe/384x0/filters:format(webp):quality(75)/samsung_galaxy_s25_fe_trang_1_74f48150f8.png", km: 23, chip: "Dimensity 700", ram: "4", rom: "64" },
+            { id: 5, name: "Samsung Galaxy A04s 4GB/64GB Xanh", price: 2990000, img: "https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a576blbsxxv/gallery/vn-galaxy-a57-5g-sm-a576-sm-a576blbsxxv-551559676", km: 25, chip: "Exynos 850", ram: "6", rom: "64" },
+            { id: 6, name: "Samsung Galaxy A04s 4GB/64GB Đen", price: 2990000, img: "https://images.samsung.com/is/image/samsung/p6pim/vn/sm-a576bdbqxxv/gallery/vn-galaxy-a57-5g-sm-a576-sm-a576bdbqxxv-551559581", km: 12, chip: "Snapdragon", ram: "6", rom: "12" },
+            { id: 7, name: "OPPO A77s 8GB/128GB Xanh", price: 5490000, img: "https://samsung.ngocnguyen.vn/cdn/images/202403/goods_img/samsung-galaxy-s22-ultra-5g-my--like-new-99-G15599-1711780442982.png", km: 13, chip: "Snapdragon 680", ram: "6", rom: "128" },
+            { id: 8, name: "Samsung Galaxy A14 5G 4GB/128GB Đỏ", price: 3990000, img: "https://samsung.ngocnguyen.vn/cdn/images/202404/goods_img/samsung-galaxy-note-20-ultra-5g-my--like-new-99-G15665-1711964951060.png", km: 23, chip: "Dimensity 700", ram: "4", rom: "16" }
+        ];
+
+        let gioHang = [];
+
+        function renderSP() {
+            let html = "";
+            for (let i = 0; i < listSP.length; i++) {
+                let s = listSP[i];
+                html += `
+            <div class="card">
+                <img src="${s.img}">
+                <h3>${s.name}</h3>
+                <div class="price">Giá: ${s.price.toLocaleString()}đ</div>
+                <div class="info-text">Khuyến mãi: ${s.km}</div>
+                <div class="info-text">Chip: ${s.chip}</div>
+                <div class="info-text">Ram: ${s.ram}</div>
+                <div class="info-text">Rom: ${s.rom}</div>
+                <button class="btn-add" onclick="addCart(${s.id})">Thêm vào giỏ hàng</button>
+                <button class="btn-view" onclick="viewDetail(${s.id})">Xem chi tiết</button>
+            </div>`;
+            }
+            document.getElementById("product-list").innerHTML = html;
+        }
+
+        function addCart(id) {
+            let trung = false;
+            for (let i = 0; i < gioHang.length; i++) {
+                if (gioHang[i].id == id) {
+                    gioHang[i].soluong++;
+                    trung = true;
+                }
+            }
+            if (!trung) {
+                for (let j = 0; j < listSP.length; j++) {
+                    if (listSP[j].id == id) {
+                        gioHang.push({ id: listSP[j].id, ten: listSP[j].name, hinh: listSP[j].img, gia: listSP[j].price, soluong: 1 });
+                    }
+                }
+            }
+            alert("Đã thêm!");
+            renderCart();
+        }
+
+        function renderCart() {
+            let html = "";
+            for (let i = 0; i < gioHang.length; i++) {
+                let item = gioHang[i];
+                let tong = item.gia * item.soluong;
+                html += `
+            <tr>
+                <td>${i + 1}</td>
+                <td style="text-align:left">${item.ten}</td>
+                <td><img src="${item.hinh}" style="width:40px"></td>
+                <td>${item.gia.toLocaleString()}</td>
+                <td>${item.soluong}</td>
+                <td>${tong.toLocaleString()}</td>
+                <td>
+                    <button class="btn-minus" onclick="updateSL(${item.id}, -1)">-</button>
+                    <button class="btn-plus" onclick="updateSL(${item.id}, 1)">+</button>
+                </td>
+                <td><button class="btn-del" onclick="xoaSP(${item.id})">X</button></td>
+            </tr>`;
+            }
+            document.getElementById("cart-body").innerHTML = html;
+        }
+
+        function updateSL(id, n) {
+            for (let i = 0; i < gioHang.length; i++) {
+                if (gioHang[i].id == id) {
+                    gioHang[i].soluong += n;
+                    if (gioHang[i].soluong < 1) xoaSP(id);
+                }
+            }
+            renderCart();
+        }
+
+        function xoaSP(id) {
+            let tam = [];
+            for (let i = 0; i < gioHang.length; i++) {
+                if (gioHang[i].id != id) tam.push(gioHang[i]);
+            }
+            gioHang = tam;
+            renderCart();
+        }
+
+        function viewDetail(id) {
+            let sp;
+            for (let i = 0; i < listSP.length; i++) {
+                if (listSP[i].id == id) sp = listSP[i];
+            }
+            let giaSauGiam = sp.price * (1 - sp.km / 100);
+            document.getElementById("home-page").style.display = "none";
+            document.getElementById("detail-page").style.display = "block";
+            document.getElementById("detail-data").innerHTML = `
+            <div class="detail-flex">
+                <div class="detail-left"><img src="${sp.img}" style="width:100%"></div>
+                <div class="detail-right">
+                    <h2>${sp.name}</h2>
+                    <div class="detail-price-box">
+                        <span style="text-decoration:line-through; color:#aaa; margin-right:10px">${sp.price.toLocaleString()}đ</span>
+                        <span class="detail-price-main">${giaSauGiam.toLocaleString()}đ</span>
+                        <span style="background:#ff7675; color:white; padding:2px 8px; border-radius:10px; margin-left:10px">-${sp.km}%</span>
+                    </div>
+                    <div class="spec-table">
+                        <p><b> Thông số kỹ thuật:</b></p>
+                        <div class="spec-row"><span>Chip:</span><span>${sp.chip}</span></div>
+                        <div class="spec-row"><span>Màn hình:</span><span>6.5 inch</span></div>
+                        <div class="spec-row"><span>RAM:</span><span>${sp.ram} GB</span></div>
+                        <div class="spec-row"><span>ROM:</span><span>${sp.rom} GB</span></div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function showCart(bool) { document.getElementById("cart-modal").style.display = bool ? "block" : "none"; }
+        function goHome() { document.getElementById("home-page").style.display = "block"; document.getElementById("detail-page").style.display = "none"; }
+
+        renderSP();
+    </script>
+</body>
+
+</html>
